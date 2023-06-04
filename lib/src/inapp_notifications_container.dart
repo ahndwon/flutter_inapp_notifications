@@ -141,80 +141,82 @@ class _Notification extends StatelessWidget {
   final VoidCallback? onTap;
   final Widget Function()? customWidgetBuilder;
 
-  const _Notification(
-      {required this.stateKey,
-      required this.leading,
-      required this.ending,
-      required this.title,
-      required this.description,
-      required this.onTap,
-      required this.customWidgetBuilder,
-      });
+  const _Notification({
+    required this.stateKey,
+    required this.leading,
+    required this.ending,
+    required this.title,
+    required this.description,
+    required this.onTap,
+    required this.customWidgetBuilder,
+  });
 
   final Key stateKey;
 
   Widget _buildNotification(BuildContext context) {
-    return customWidgetBuilder?.call() ?? Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: InAppNotificationsTheme.backgroundColor,
-        // borderRadius: BorderRadius.circular(8.0),
-        // boxShadow: InAppNotificationsTheme.shadow
-        //     ? const [
-        //         BoxShadow(blurRadius: 10.0, color: Colors.black26),
-        //       ]
-        //     : null,
-      ),
-      padding: EdgeInsets.fromLTRB(
-        16,
-        MediaQuery.of(context).viewPadding.top + 16,
-        16,
-        16,
-      ),
-      child: Row(
-        children: <Widget>[
-          if (leading != null) leading ?? const SizedBox(),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null)
-                  Text(
-                    title!,
-                    style: TextStyle(
-                      fontSize: InAppNotificationsTheme.titleFontSize,
-                      color: InAppNotificationsTheme.textColor,
-                      height: 1.4,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                if (description != null)
-                  Flexible(
-                    child: Text(
-                      description!,
-                      style: TextStyle(
-                        fontSize: InAppNotificationsTheme.descriptionFontSize,
-                        color: InAppNotificationsTheme.textColor,
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-            ),
+    return customWidgetBuilder?.call() ??
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: InAppNotificationsTheme.backgroundColor,
+            // borderRadius: BorderRadius.circular(8.0),
+            // boxShadow: InAppNotificationsTheme.shadow
+            //     ? const [
+            //         BoxShadow(blurRadius: 10.0, color: Colors.black26),
+            //       ]
+            //     : null,
           ),
-          const SizedBox(width: 16),
-          if (ending != null)
-            Container(
-              margin: const EdgeInsets.only(right: 8.0),
-              child: ending,
-            ),
-        ],
-      ),
-    );
+          padding: EdgeInsets.fromLTRB(
+            16,
+            MediaQuery.of(context).viewPadding.top + 16,
+            16,
+            16,
+          ),
+          child: Row(
+            children: <Widget>[
+              if (leading != null) leading ?? const SizedBox(),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: TextStyle(
+                          fontSize: InAppNotificationsTheme.titleFontSize,
+                          color: InAppNotificationsTheme.textColor,
+                          height: 1.4,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    if (description != null)
+                      Flexible(
+                        child: Text(
+                          description!,
+                          style: TextStyle(
+                            fontSize:
+                                InAppNotificationsTheme.descriptionFontSize,
+                            color: InAppNotificationsTheme.textColor,
+                            height: 1.4,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              if (ending != null)
+                Container(
+                  margin: const EdgeInsets.only(right: 8.0),
+                  child: ending,
+                ),
+            ],
+          ),
+        );
   }
 
   @override
