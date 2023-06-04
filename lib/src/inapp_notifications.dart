@@ -6,6 +6,7 @@ import 'package:flutter_inapp_notifications/animations/inapp_notification_animat
 import 'package:flutter_inapp_notifications/animations/offset_animation.dart';
 import 'package:flutter_inapp_notifications/animations/opacity_animation.dart';
 import 'package:flutter_inapp_notifications/animations/scale_animation.dart';
+import 'package:indexed/indexed.dart';
 
 import 'inapp_notifications_container.dart';
 import 'inapp_notifications_overlay.dart';
@@ -117,32 +118,40 @@ class InAppNotifications {
   /// [onTap] Function to be called when gesture onTap is detected
   /// [duration] Duration which the notification will be shown
   /// [persistent] Persistent mode will keep the notification visible until dismissed
-  static Future<void> show(
-      {String? title,
-      String? description,
-      Widget? leading,
-      Widget? ending,
-      VoidCallback? onTap,
-      Duration? duration,
-      bool persistent = false}) {
+  static Future<void> show({
+    String? title,
+    String? description,
+    Widget? leading,
+    Widget? ending,
+    VoidCallback? onTap,
+    Duration? duration,
+    bool persistent = false,
+    int index = 0,
+    String? id,
+    Widget Function()? customWidgetBuilder,
+  }) {
     return _instance._show(
-        title: title,
-        description: description,
-        leading: leading != null
-            ? SizedBox(
-                height: 50,
-                child: leading,
-              )
-            : null,
-        ending: ending != null
-            ? SizedBox(
-                height: 50,
-                child: ending,
-              )
-            : null,
-        onTap: onTap,
-        persistent: persistent,
-        duration: duration ?? const Duration(seconds: 5));
+      title: title,
+      description: description,
+      leading: leading != null
+          ? SizedBox(
+              height: 50,
+              child: leading,
+            )
+          : null,
+      ending: ending != null
+          ? SizedBox(
+              height: 50,
+              child: ending,
+            )
+          : null,
+      onTap: onTap,
+      persistent: persistent,
+      duration: duration ?? const Duration(seconds: 5),
+      index: index,
+      id: id,
+      customWidgetBuilder: customWidgetBuilder,
+    );
   }
 
   /// Add status callback
@@ -172,6 +181,9 @@ class InAppNotifications {
     VoidCallback? onTap,
     Duration? duration,
     bool persistent = false,
+    int index = 0,
+    String? id,
+    Widget Function()? customWidgetBuilder,
   }) async {
     log('inapp: show');
     assert(
@@ -200,10 +212,15 @@ class InAppNotifications {
       onTap: onTap,
       animation: showAnimation,
       completer: completer,
+      customWidgetBuilder: customWidgetBuilder,
     );
-    final item = InAppNotificationItem(container: container, key: _key);
+    final item = InAppNotificationItem(
+      id: id,
+      container: Indexed(index: index, child: container),
+      key: _key,
+    );
     itemList.add(item);
-    _container = Stack(
+    _container = Indexer(
       children: itemList.map((e) => e.container).toList(),
     );
     // _container = InAppNotificationsContainer(
@@ -237,6 +254,15 @@ class InAppNotifications {
     bool animation = true,
   }) {
     return _instance._dismiss(key, animation);
+  }
+
+  void dismissById(String itemId) {
+    try {
+      final item = itemList.firstWhere((e) => e.id == itemId);
+      dismiss(key: item.key, animation: true);
+    } catch (e, st) {
+      log('matched item not found: $e, $st');
+    }
   }
 
   Future<void> _dismiss(
@@ -295,10 +321,12 @@ class InAppNotificationItem {
   InAppNotificationItem({
     required this.container,
     required this.key,
+    this.id,
     this.timer,
   });
 
-  final InAppNotificationsContainer container;
+  final Widget container;
   final GlobalKey<InAppNotificationsContainerState> key;
+  final String? id;
   Timer? timer;
 }

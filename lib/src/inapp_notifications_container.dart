@@ -14,6 +14,7 @@ class InAppNotificationsContainer extends StatefulWidget {
   final VoidCallback? onTap;
   final Completer<void>? completer;
   final bool animation;
+  final Widget Function()? customWidgetBuilder;
 
   const InAppNotificationsContainer({
     required Key key,
@@ -24,6 +25,7 @@ class InAppNotificationsContainer extends StatefulWidget {
     this.onTap,
     this.completer,
     this.animation = true,
+    this.customWidgetBuilder,
   }) : super(key: key);
 
   @override
@@ -119,6 +121,7 @@ class InAppNotificationsContainerState
                 leading: widget.leading,
                 ending: widget.ending,
                 onTap: widget.onTap,
+                customWidgetBuilder: widget.customWidgetBuilder,
               ),
               _animationController,
               AlignmentDirectional.topCenter,
@@ -136,6 +139,7 @@ class _Notification extends StatelessWidget {
   final String? title;
   final String? description;
   final VoidCallback? onTap;
+  final Widget Function()? customWidgetBuilder;
 
   const _Notification(
       {required this.stateKey,
@@ -143,12 +147,14 @@ class _Notification extends StatelessWidget {
       required this.ending,
       required this.title,
       required this.description,
-      required this.onTap});
+      required this.onTap,
+      required this.customWidgetBuilder,
+      });
 
   final Key stateKey;
 
   Widget _buildNotification(BuildContext context) {
-    return Container(
+    return customWidgetBuilder?.call() ?? Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: InAppNotificationsTheme.backgroundColor,
