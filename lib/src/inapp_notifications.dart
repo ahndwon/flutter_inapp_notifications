@@ -219,7 +219,10 @@ class InAppNotifications {
       container: Indexed(index: index, child: container),
       key: _key,
     );
-    itemList.add(item);
+    if (itemList.where((e) => e.id == id).isEmpty) {
+      itemList.add(item);
+    }
+
     _container = Indexer(
       children: itemList.map((e) => e.container).toList(),
     );
