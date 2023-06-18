@@ -12,18 +12,19 @@ class OffsetAnimation extends InAppNotificationAnimation {
     AlignmentGeometry alignment,
   ) {
     Offset begin = const Offset(0, -7);
-        // Offset begin = alignment == AlignmentDirectional.topCenter
-        // ? const Offset(0, -7)
-        // : alignment == AlignmentDirectional.bottomCenter
-        //     ? const Offset(0, 7)
-        //     : const Offset(0, 0);
+    // Offset begin = alignment == AlignmentDirectional.topCenter
+    // ? const Offset(0, -7)
+    // : alignment == AlignmentDirectional.bottomCenter
+    //     ? const Offset(0, 7)
+    //     : const Offset(0, 0);
 
     Animation<Offset> animation = Tween(
       begin: begin,
       end: const Offset(0, 0),
     ).animate(
       CurvedAnimation(
-        curve: Curves.ease, parent: controller,
+        curve: Curves.ease,
+        parent: controller,
       ),
     );
     return SlideTransition(
