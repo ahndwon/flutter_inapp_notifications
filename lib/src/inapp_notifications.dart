@@ -61,7 +61,7 @@ class InAppNotifications {
   // final List<GlobalKey<InAppNotificationsContainerState>?> _keyList = [];
 
   // Widget? _container;
-  Stack _container = Stack(children: []);
+  Stack _container = const Stack(children: []);
 
   // Timer? _timer;
   // final List<Timer?> _timerList = [];
@@ -201,10 +201,10 @@ class InAppNotifications {
     // if (_key != null) await dismiss(animation: false);
 
     Completer<void> completer = Completer<void>();
-    final _key = GlobalKey<InAppNotificationsContainerState>();
+    final key = GlobalKey<InAppNotificationsContainerState>();
     // _keyList.add(_key);
     final container = InAppNotificationsContainer(
-      key: _key,
+      key: key,
       title: title,
       description: description,
       leading: leading,
@@ -217,7 +217,7 @@ class InAppNotifications {
     final item = InAppNotificationItem(
       id: id,
       container: Indexed(index: index, child: container),
-      key: _key,
+      key: key,
     );
     if (itemList.where((e) => e.id == id).isEmpty) {
       itemList.add(item);
@@ -273,12 +273,12 @@ class InAppNotifications {
     bool animation,
   ) async {
     log('inapp _dismiss: $animation');
-    if (key != null && key?.currentState == null) {
+    if (key.currentState == null) {
       _reset(key);
       return;
     }
 
-    return key?.currentState?.dismiss(animation).whenComplete(() {
+    return key.currentState?.dismiss(animation).whenComplete(() {
       _reset(key);
     });
   }
